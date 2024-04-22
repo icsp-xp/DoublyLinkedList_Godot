@@ -40,11 +40,12 @@ while it2.is_valid():
 	it2.prev()
 ```
 
-## Constructor
+## Documentation for the List2 class
+### Constructor
 
-`_init(elems : Array = []) -> void` Initializes a new instance of the List2 class. If an array is passed, the list is initialized with the elements of the array.
+- `_init(elems : Array = []) -> void` Initializes a new instance of the List2 class. If an array is passed, the list is initialized with the elements of the array.
 
-## Methods
+### Methods
 
 - `begin() -> List2Iterator` Returns an iterator that points to the first element in the list.
 - `end() -> List2Iterator` Returns an iterator that points to the last element in the list.
