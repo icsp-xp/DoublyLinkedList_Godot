@@ -58,5 +58,5 @@ while it2.is_valid():
 - `empty() -> bool` Returns true if the list is empty, false otherwise.
 - `size() -> int` Returns the total number of elements in the list.
 - `remove(it : List2Iterator) -> void` Removes the element pointed to by the iterator from the list.
-- `find(val : Variant) -> List2Iterator` Returns the iterator pointing to the first occurrence of ‘val’. If ‘val’ is not found, it returns null.
-- `rfind(val : Variant) -> List2Iterator` Returns the iterator pointing to the last occurrence of ‘val’. If ‘val’ is not found, it returns null.
+- `find(val : Variant) -> List2Iterator` Returns the iterator pointing to the first occurrence of ‘val’. If ‘val’ is not found, it returns null. (scrolls through the list from beginning to end until it finds the item)
+- `rfind(val : Variant) -> List2Iterator` Returns the iterator pointing to the last occurrence of ‘val’. If ‘val’ is not found, it returns null. (scrolls the list from the end to the beginning until it finds the item)
