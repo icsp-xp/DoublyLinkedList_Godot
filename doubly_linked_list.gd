@@ -19,6 +19,10 @@ class Elem extends Object:
 		return _value
 	
 	
+	func set_value(val : Variant) -> void:
+		_value = val
+	
+	
 	func get_previous_elem() -> Elem:
 		return _previous_elem
 	
@@ -36,18 +40,7 @@ class Elem extends Object:
 
 
 
-# -- example of using List2Iterator --
-# var list : List2 = List2.new([1, 2, 3, 4, 5, 6, 7, 8, 9])
-# var it : List2.List2Iterator = list.begin()
-# var it2 : List2.List2Iterator = list.end()
-#
-# while it.is_valid():
-#     print(it.value()) # output: 0 1 2 3 4 5 6 7 8 9
-#     it.next()
-#
-# while it2.is_valid():
-#     print(r_it.value()) # output: 9 8 7 6 5 4 3 2 1 0
-#     it2.prev()
+# ----------------------------------------------------------------------------
 
 ## implementation of iterator for List2
 class List2Iterator extends RefCounted:
@@ -76,6 +69,12 @@ class List2Iterator extends RefCounted:
 	func value() -> Variant:
 		assert(is_valid(), ERROR_ITERATOR_INVALID)
 		return _curr.get_value()
+	
+	
+	## sets the list element currently pointed to by the iterator
+	func set_value(val : Variant) -> void:
+		assert(is_valid(), ERROR_ITERATOR_INVALID)
+		_curr.set_value(val)
 	
 	
 	## returns true if the iterator is valid, false otherwise
@@ -116,11 +115,13 @@ func _init(elems : Array = []) -> void:
 
 ## returns an iterator that points to the first element in the list
 func begin() -> List2Iterator:
+	assert(_first != null, "iterator cannot be created because the first element is null")
 	return List2Iterator.new(_first)
 
 
 ## returns an iterator that points to the last element in the list
 func end() -> List2Iterator:
+	assert(_last != null, "iterator cannot be created because the last element is null")
 	return List2Iterator.new(_last)
 
 
@@ -192,9 +193,21 @@ func pop_back() -> void:
 	_size -= 1
 
 
+## set the first element of the list with 'val'
+func set_front(val : Variant) -> void:
+	assert(_first != null, "iterator cannot be created because the first element is null")
+	_first.set_value(val)
+
+
 ## returns the first element in the list
 func front() -> Variant:
 	return _first.get_value() if not empty() else null
+
+
+## set the last element of the list with 'val'
+func set_back(val : Variant) -> void:
+	assert(_last != null, "iterator cannot be created because the last element is null")
+	_last.set_value(val)
 
 
 ## returns the last element in the list
@@ -237,7 +250,9 @@ func find(val : Variant) -> List2Iterator:
 	var it : List2Iterator = self.begin()
 	
 	while it.is_valid():
-		if it.value() == val:
+		var value : Variant = it.value()
+		
+		if typeof(value) == typeof(val) and value == val:
 			return it
 			
 		it.next()
@@ -251,9 +266,57 @@ func rfind(val : Variant) -> List2Iterator:
 	var it : List2Iterator = self.end()
 	
 	while it.is_valid():
-		if it.value() == val:
+		var value : Variant = it.value()
+		
+		if typeof(value) == typeof(val) and value == val:
 			return it
 			
 		it.prev()
 	
 	return null
+
+
+## returns a deep copy of the list. If 'inner' is true, inner Dictionary and 
+## Array keys and values are also copied, recursively. In the case where there  
+## is an element within the list that inherits from Node you can specify by 
+## which mode to duplicate the element, for more details see:
+## https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-duplicate
+func dcopy(inner : bool = false, flags : Node.DuplicateFlags = 15) -> List2:
+	var value : Variant = null
+	var new_list : List2 = List2.new()
+	var it : List2Iterator = self.begin()
+	
+	while it.is_valid():
+		value = it.value()
+		
+		if value is Object and value is Node and value.has_method("duplicate"):
+			value = value.duplicate(flags)
+		else:
+			match typeof(value):
+				TYPE_DICTIONARY:
+					value = value.duplicate(inner)
+				TYPE_ARRAY:
+					value = value.duplicate(inner)
+				TYPE_PACKED_BYTE_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_INT32_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_INT64_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_FLOAT32_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_FLOAT64_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_STRING_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_VECTOR2_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_VECTOR3_ARRAY:
+					value = value.duplicate()
+				TYPE_PACKED_COLOR_ARRAY:
+					value = value.duplicate()
+					
+		new_list.push_back(value)
+		it.next()
+	
+	return new_list
