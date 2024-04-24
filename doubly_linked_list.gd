@@ -44,7 +44,7 @@ class Elem extends RefCounted:
 
 ## implementation of iterator for List2
 class List2Iterator extends RefCounted:
-	const ERROR_ITERATOR_INVALID : String = "Invalid List2Iterator"
+	const ERROR_INVALID_ITERATOR : String = "Invalid List2Iterator"
 	
 	var _curr : Elem
 	
@@ -55,25 +55,25 @@ class List2Iterator extends RefCounted:
 	
 	## moves the iterator to the next element in the list
 	func next() -> void:
-		assert(is_valid(), ERROR_ITERATOR_INVALID)
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		_curr = _curr.get_next_elem()
 	
 	
 	## moves the iterator to the previous element in the list
 	func prev() -> void:
-		assert(is_valid(), ERROR_ITERATOR_INVALID)
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		_curr = _curr.get_previous_elem()
 	
 	
 	## returns the value of the element the iterator is pointing to
 	func value() -> Variant:
-		assert(is_valid(), ERROR_ITERATOR_INVALID)
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		return _curr.get_value()
 	
 	
 	## sets the list element currently pointed to by the iterator
 	func set_value(val : Variant) -> void:
-		assert(is_valid(), ERROR_ITERATOR_INVALID)
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		_curr.set_value(val)
 	
 	
@@ -84,20 +84,21 @@ class List2Iterator extends RefCounted:
 	
 	# returns the element pointed to by the iterator
 	func _get_curr() -> Elem:
-		assert(is_valid(), ERROR_ITERATOR_INVALID) # the returned iterator must be valid
+		assert(is_valid(), ERROR_INVALID_ITERATOR) # the returned iterator must be valid
 		return _curr
 	
 	
 	# sets the element pointed to by the iterator
 	func _set_curr(__curr : Elem) -> void:
 		_curr = __curr
-		assert(is_valid(), ERROR_ITERATOR_INVALID) # the returned iterator must be valid
+		assert(is_valid(), ERROR_INVALID_ITERATOR) # the returned iterator must be valid
 
 
 
 # ----------------------------------------------------------------------------
 
 const ERROR_IS_EMPTY : String = "the list is empty"
+const ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER : String = "the iterator cannot be created because the pointer to the element is null"
 
 var _first : Elem
 var _last : Elem
@@ -115,13 +116,13 @@ func _init(elems : Array = []) -> void:
 
 ## returns an iterator that points to the first element in the list
 func begin() -> List2Iterator:
-	assert(_first != null, "iterator cannot be created because the first element is null")
+	assert(_first != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	return List2Iterator.new(_first)
 
 
 ## returns an iterator that points to the last element in the list
 func end() -> List2Iterator:
-	assert(_last != null, "iterator cannot be created because the last element is null")
+	assert(_last != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	return List2Iterator.new(_last)
 
 
@@ -197,7 +198,7 @@ func pop_back() -> void:
 
 ## set the first element of the list with 'val'
 func set_front(val : Variant) -> void:
-	assert(_first != null, "iterator cannot be created because the first element is null")
+	assert(_first != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	_first.set_value(val)
 
 
@@ -208,7 +209,7 @@ func front() -> Variant:
 
 ## set the last element of the list with 'val'
 func set_back(val : Variant) -> void:
-	assert(_last != null, "iterator cannot be created because the last element is null")
+	assert(_last != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	_last.set_value(val)
 
 
