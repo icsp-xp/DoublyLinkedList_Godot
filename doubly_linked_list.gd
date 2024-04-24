@@ -3,7 +3,7 @@ class_name List2
 extends RefCounted
 
 
-class Elem extends Object:
+class Elem extends RefCounted:
 	var _previous_elem : Elem
 	var _next_elem : Elem
 	var _value : Variant
@@ -168,8 +168,9 @@ func pop_front() -> void:
 		_first.get_next_elem().set_previous_elem(null)
 		_first = _first.get_next_elem()
 		tmp.set_next_elem(null)
-	
-	tmp.free()
+		
+	while tmp.get_reference_count() > 0:
+		tmp.unreference()
 	
 	_size -= 1
 
@@ -188,7 +189,8 @@ func pop_back() -> void:
 		_last = _last.get_previous_elem()
 		tmp.set_previous_elem(null)
 		
-	tmp.free()
+	while tmp.get_reference_count() > 0:
+		tmp.unreference()
 	
 	_size -= 1
 
