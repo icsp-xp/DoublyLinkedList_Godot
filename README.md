@@ -97,7 +97,6 @@ while it1.is_valid():
 - `set_back(val : Variant) -> void` Set the last element of the list with 'val'.
 - `empty() -> bool` Returns true if the list is empty, false otherwise.
 - `size() -> int` Returns the total number of elements in the list.
-- `remove(it : List2Iterator) -> void` Removes the element pointed to by the iterator from the list.
 - `find(val : Variant) -> List2Iterator` Returns the iterator pointing to the first occurrence of 'val'. If 'val' is not found, it returns null. (scrolls through the list from beginning to end until it finds the item)
 - `rfind(val : Variant) -> List2Iterator` Returns the iterator pointing to the last occurrence of 'val'. If 'val' is not found, it returns null. (scrolls the list from the end to the beginning until it finds the item)
 - `dcopy(inner : bool = false, flags : Node.DuplicateFlags = 15) -> List2` Returns a deep copy of the list. If 'inner' is true, inner Dictionary and Array keys and values are also copied, recursively. In the case where there is an element within the list that inherits from Node you can specify by which mode to duplicate the element, for more details see: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-duplicate
@@ -109,3 +108,4 @@ while it1.is_valid():
 - `value() -> Variant` Returns the value of the element the iterator is pointing to.
 - `is_valid() -> bool` Returns true if the iterator is valid, false otherwise.
 - `set_value(val : Variant) -> void` Sets the list element currently pointed to by the iterator.
+- `remove() -> void` Removes the element pointed to by the iterator from the list.

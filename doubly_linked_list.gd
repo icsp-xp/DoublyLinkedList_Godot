@@ -47,10 +47,11 @@ class List2Iterator extends RefCounted:
 	const ERROR_INVALID_ITERATOR : String = "Invalid List2Iterator"
 	
 	var _curr : Elem
+	var _l : List2
 	
-	
-	func _init(__curr : Elem) -> void:
+	func _init(__curr : Elem, __l) -> void:
 		_curr = __curr
+		_l = __l
 	
 	
 	## moves the iterator to the next element in the list
@@ -82,16 +83,23 @@ class List2Iterator extends RefCounted:
 		return _curr != null
 	
 	
-	# returns the element pointed to by the iterator
-	func _get_curr() -> Elem:
-		assert(is_valid(), ERROR_INVALID_ITERATOR) # the returned iterator must be valid
-		return _curr
-	
-	
-	# sets the element pointed to by the iterator
-	func _set_curr(__curr : Elem) -> void:
-		_curr = __curr
-		assert(is_valid(), ERROR_INVALID_ITERATOR) # the returned iterator must be valid
+	## removes the pointed element from the iterator
+	func remove() -> void:
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
+		
+		if _curr == _l._first:
+			_l.pop_front()
+			_curr = _l._first
+		elif _curr == _l._last:
+			_l.pop_back()
+			_curr = _l._last
+		else:
+			_curr.get_previous_elem().set_next_elem(_curr.get_next_elem())
+			_curr.get_next_elem().set_previous_elem(_curr.get_previous_elem())
+			_curr = _curr.get_next_elem()
+			
+			while _curr.get_reference_count() > 0:
+				_curr.unreference()
 
 
 
@@ -117,13 +125,13 @@ func _init(elems : Array = []) -> void:
 ## returns an iterator that points to the first element in the list
 func begin() -> List2Iterator:
 	assert(_first != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
-	return List2Iterator.new(_first)
+	return List2Iterator.new(_first, self)
 
 
 ## returns an iterator that points to the last element in the list
 func end() -> List2Iterator:
 	assert(_last != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
-	return List2Iterator.new(_last)
+	return List2Iterator.new(_last, self)
 
 
 ## adds 'val' to the end of the list
@@ -226,27 +234,6 @@ func empty() -> bool:
 ## returns the number of total elements
 func size() -> int:
 	return _size
-
-
-## removes the pointed element from the iterator
-func remove(it : List2Iterator) -> void:
-	assert(not empty(), ERROR_IS_EMPTY)
-	
-	var curr : Elem = it._get_curr()
-	
-	if curr == _first:
-		pop_front()
-		it._set_curr(_first)
-	elif curr == _last:
-		pop_back()
-		it._set_curr(_last)
-	else:
-		curr.get_previous_elem().set_next_elem(curr.get_next_elem())
-		curr.get_next_elem().set_previous_elem(curr.get_previous_elem())
-		it._set_curr(curr.get_next_elem())
-		
-		while curr.get_reference_count() > 0:
-			curr.unreference()
 
 
 ## returns the iterator pointing to the first occurrence of 'val'. 
