@@ -1,6 +1,5 @@
 # Implementation of a doubly linked list in godot 4
-
-Usage example
+To use the list place the doubly_linked_list.gd script in the project file system. Usage example:
 
 ```python
 # creates a list by initializing it with 1, 2, 3, 4, 5, 6, 7, 8, 9
