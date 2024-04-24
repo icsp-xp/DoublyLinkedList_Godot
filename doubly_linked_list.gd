@@ -100,6 +100,27 @@ class List2Iterator extends RefCounted:
 			
 			while _curr.get_reference_count() > 0:
 				_curr.unreference()
+	
+	
+	## insert the new element where the iterator points, at the end of the 
+	## insertion the iterator will point to the inserted element
+	func insert(val : Variant) -> void:
+		assert(is_valid(), ERROR_INVALID_ITERATOR)
+		
+		if _curr == _l._first:
+			_l.push_front(val)
+			_curr = _l._first
+		elif _curr == _l._last:
+			_l.push_back(val)
+			_curr = _l._last
+		else:
+			var new_elem : Elem = Elem.new(val)
+			
+			_curr.get_previous_elem().set_next_elem(new_elem)
+			new_elem.set_previous_elem(_curr.get_previous_elem())
+			new_elem.set_next_elem(_curr)
+			_curr.set_previous_elem(new_elem)
+			_curr = new_elem
 
 
 

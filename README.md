@@ -109,3 +109,4 @@ while it1.is_valid():
 - `is_valid() -> bool` Returns true if the iterator is valid, false otherwise.
 - `set_value(val : Variant) -> void` Sets the list element currently pointed to by the iterator.
 - `remove() -> void` Removes the element pointed to by the iterator from the list.
+- `insert(val : Variant) -> void` Insert the new element where the iterator points, at the end of the insertion the iterator will point to the inserted element.
