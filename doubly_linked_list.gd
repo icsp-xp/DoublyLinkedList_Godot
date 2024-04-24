@@ -244,7 +244,9 @@ func remove(it : List2Iterator) -> void:
 		curr.get_previous_elem().set_next_elem(curr.get_next_elem())
 		curr.get_next_elem().set_previous_elem(curr.get_previous_elem())
 		it._set_curr(curr.get_next_elem())
-		curr.free()
+		
+		while curr.get_reference_count() > 0:
+			curr.unreference()
 
 
 ## returns the iterator pointing to the first occurrence of 'val'. 
