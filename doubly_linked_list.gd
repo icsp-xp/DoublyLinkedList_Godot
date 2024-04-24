@@ -283,7 +283,7 @@ func rfind(val : Variant) -> List2Iterator:
 ## is an element within the list that inherits from Node you can specify by 
 ## which mode to duplicate the element, for more details see:
 ## https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-duplicate
-func dcopy(inner : bool = false, flags : Node.DuplicateFlags = 15) -> List2:
+func dcopy(inner : bool = false, flags : int = 15) -> List2:
 	var value : Variant = null
 	var new_list : List2 = List2.new()
 	var it : List2Iterator = self.begin()
@@ -292,7 +292,8 @@ func dcopy(inner : bool = false, flags : Node.DuplicateFlags = 15) -> List2:
 		value = it.value()
 		
 		if value is Object and value is Node and value.has_method("duplicate"):
-			value = value.duplicate(flags)
+			flags = flags as Node.DuplicateFlags
+			value = value.duplicate(flags if flags != null else 15)
 		else:
 			match typeof(value):
 				TYPE_DICTIONARY:
