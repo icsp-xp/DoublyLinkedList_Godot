@@ -9,7 +9,7 @@ print(list.back()) # output: 9
 list.pop_back()
 print(list.back()) # output: 8
 
-# createas an empty list
+# creates an empty list
 var list2 : List2 = List2.new()
 
 list2.push_back(false)
