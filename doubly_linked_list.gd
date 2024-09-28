@@ -4,12 +4,12 @@ extends RefCounted
 
 
 class Elem extends RefCounted:
-	var _previous_elem : Elem
-	var _next_elem : Elem
-	var _value : Variant
+	var _previous_elem: Elem
+	var _next_elem: Elem
+	var _value: Variant
 	
 	
-	func _init(__value : Variant) -> void:
+	func _init(__value: Variant) -> void:
 		_previous_elem = null
 		_next_elem = null
 		_value = __value
@@ -19,7 +19,7 @@ class Elem extends RefCounted:
 		return _value
 	
 	
-	func set_value(val : Variant) -> void:
+	func set_value(val: Variant) -> void:
 		_value = val
 	
 	
@@ -27,7 +27,7 @@ class Elem extends RefCounted:
 		return _previous_elem
 	
 	
-	func set_previous_elem(elem : Elem) -> void:
+	func set_previous_elem(elem: Elem) -> void:
 		_previous_elem = elem
 	
 	
@@ -35,7 +35,7 @@ class Elem extends RefCounted:
 		return _next_elem
 	
 	
-	func set_next_elem(elem : Elem) -> void:
+	func set_next_elem(elem: Elem) -> void:
 		_next_elem = elem
 
 
@@ -44,12 +44,13 @@ class Elem extends RefCounted:
 
 ## implementation of iterator for List2
 class List2Iterator extends RefCounted:
-	const ERROR_INVALID_ITERATOR : String = "Invalid List2Iterator"
+	const ERROR_INVALID_ITERATOR: String = "Invalid List2Iterator"
 	
-	var _curr : Elem
-	var _l : List2
+	var _curr: Elem
+	var _l: List2
 	
-	func _init(__curr : Elem, __l) -> void:
+	
+	func _init(__curr: Elem, __l: Variant) -> void:
 		_curr = __curr
 		_l = __l
 	
@@ -73,7 +74,7 @@ class List2Iterator extends RefCounted:
 	
 	
 	## sets the list element currently pointed to by the iterator
-	func set_value(val : Variant) -> void:
+	func set_value(val: Variant) -> void:
 		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		_curr.set_value(val)
 	
@@ -104,7 +105,7 @@ class List2Iterator extends RefCounted:
 	
 	## insert the new element where the iterator points, at the end of the 
 	## insertion the iterator will point to the inserted element
-	func insert(val : Variant) -> void:
+	func insert(val: Variant) -> void:
 		assert(is_valid(), ERROR_INVALID_ITERATOR)
 		
 		if _curr == _l._first:
@@ -114,7 +115,7 @@ class List2Iterator extends RefCounted:
 			_l.push_back(val)
 			_curr = _l._last
 		else:
-			var new_elem : Elem = Elem.new(val)
+			var new_elem: Elem = Elem.new(val)
 			
 			_curr.get_previous_elem().set_next_elem(new_elem)
 			new_elem.set_previous_elem(_curr.get_previous_elem())
@@ -129,12 +130,12 @@ class List2Iterator extends RefCounted:
 const ERROR_IS_EMPTY : String = "the list is empty"
 const ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER : String = "the iterator cannot be created because the pointer to the element is null"
 
-var _first : Elem
-var _last : Elem
-var _size : int
+var _first: Elem
+var _last: Elem
+var _size: int
 
 
-func _init(elems : Array = []) -> void:
+func _init(elems: Array[Variant] = []) -> void:
 	_first = null
 	_last = null
 	_size = 0
@@ -156,8 +157,8 @@ func end() -> List2Iterator:
 
 
 ## adds 'val' to the end of the list
-func push_back(val) -> void:
-	var elem : Elem = Elem.new(val)
+func push_back(val: Variant) -> void:
+	var elem: Elem = Elem.new(val)
 	
 	if empty():
 		_last = elem
@@ -171,8 +172,8 @@ func push_back(val) -> void:
 
 
 ## adds 'val' to the beginning of the list
-func push_front(val) -> void:
-	var elem : Elem = Elem.new(val)
+func push_front(val: Variant) -> void:
+	var elem: Elem = Elem.new(val)
 	
 	if empty():
 		_first = elem
@@ -189,7 +190,7 @@ func push_front(val) -> void:
 func pop_front() -> void:
 	assert(not empty(), ERROR_IS_EMPTY)
 	
-	var tmp : Elem = _first
+	var tmp: Elem = _first
 	
 	if _last == _first:
 		_last = null
@@ -209,7 +210,7 @@ func pop_front() -> void:
 func pop_back() -> void:
 	assert(not empty(), ERROR_IS_EMPTY)
 	
-	var tmp : Elem = _last
+	var tmp: Elem = _last
 	
 	if _last == _first:
 		_last = null
@@ -226,7 +227,7 @@ func pop_back() -> void:
 
 
 ## set the first element of the list with 'val'
-func set_front(val : Variant) -> void:
+func set_front(val: Variant) -> void:
 	assert(_first != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	_first.set_value(val)
 
@@ -237,7 +238,7 @@ func front() -> Variant:
 
 
 ## set the last element of the list with 'val'
-func set_back(val : Variant) -> void:
+func set_back(val: Variant) -> void:
 	assert(_last != null, ERROR_ITERATOR_POINTS_TO_A_NULL_POINTER)
 	_last.set_value(val)
 
@@ -259,11 +260,11 @@ func size() -> int:
 
 ## returns the iterator pointing to the first occurrence of 'val'. 
 ## If 'val' is not found it returns null
-func find(val : Variant) -> List2Iterator:
-	var it : List2Iterator = self.begin()
+func find(val: Variant) -> List2Iterator:
+	var it: List2Iterator = self.begin()
 	
 	while it.is_valid():
-		var value : Variant = it.value()
+		var value: Variant = it.value()
 		
 		if typeof(value) == typeof(val) and value == val:
 			return it
@@ -275,11 +276,11 @@ func find(val : Variant) -> List2Iterator:
 
 ## returns the iterator pointing to the last occurrence of 'val'. 
 ## If 'val' is not found it returns null
-func rfind(val : Variant) -> List2Iterator:
-	var it : List2Iterator = self.end()
+func rfind(val: Variant) -> List2Iterator:
+	var it: List2Iterator = self.end()
 	
 	while it.is_valid():
-		var value : Variant = it.value()
+		var value: Variant = it.value()
 		
 		if typeof(value) == typeof(val) and value == val:
 			return it
@@ -289,28 +290,27 @@ func rfind(val : Variant) -> List2Iterator:
 	return null
 
 
-## returns a deep copy of the list. If 'inner' is true, inner Dictionary and 
+## returns a copy of the list. If 'inner' is true, inner Dictionary and 
 ## Array keys and values are also copied, recursively. In the case where there  
 ## is an element within the list that inherits from Node you can specify by 
 ## which mode to duplicate the element, for more details see:
 ## https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-duplicate
-func dcopy(inner : bool = false, flags : int = 15) -> List2:
-	var value : Variant = null
-	var new_list : List2 = List2.new()
-	var it : List2Iterator = self.begin()
+func copy(inner: bool = false, flags: Node.DuplicateFlags = 15) -> List2:
+	var value: Variant = null
+	var new_list: List2 = List2.new()
+	var it: List2Iterator = self.begin()
 	
 	while it.is_valid():
 		value = it.value()
 		
-		if value is Object and value is Node and value.has_method("duplicate"):
-			flags = flags as Node.DuplicateFlags
-			value = value.duplicate(flags if flags != null else 15)
-		else:
+		if value is Node:
+			value = value.duplicate(flags)
+		elif inner:
 			match typeof(value):
 				TYPE_DICTIONARY:
-					value = value.duplicate(inner)
+					value = value.duplicate(true)
 				TYPE_ARRAY:
-					value = value.duplicate(inner)
+					value = value.duplicate(true)
 				TYPE_PACKED_BYTE_ARRAY:
 					value = value.duplicate()
 				TYPE_PACKED_INT32_ARRAY:
@@ -332,5 +332,5 @@ func dcopy(inner : bool = false, flags : int = 15) -> List2:
 					
 		new_list.push_back(value)
 		it.next()
-	
+		
 	return new_list
